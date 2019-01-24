@@ -13,17 +13,26 @@ itsa.postest(model = NULL, no.plots = FALSE, alpha = 0.05)
 
 \item{alpha}{define alpha level for test statistics, default is 0.05}
 }
+\value{
+if no.plots is not forced, will return a table to the console and two plots to the plot tab
+}
 \description{
 Function to produce post-estimation plots from the itsa.model function.
 }
 \details{
-This function runs and reports post-estimation tests on fits from the itsa.model function.
+This function runs and reports post-estimation tests on fits from the itsa.model function, and generates four plots.
 
-Tests whether AN(C)OVA assumptions are met when modelling for time series with Interrupted Time Series Analysis (ITSA) framework.
+Main tests are whether two key ANCOVA assumptions are met, and an additional autocorrelation test for the time series framework.
+
+The Shaprio-Wilks test examines the residuals from the fitted model for normality. A p-value less than alpha indicates abnormal residuals.
+
+The Levene's Test makes sure that there are equal variances between the treated groups. A p-value less than alpha indicates hetrogenous variances.
+
+A QQ-Norm and Boxplot are generated with the test results overlaid (respectively), with a Residual v Fitted and Autocorrelation Function Plot also generated.
 
 Default is to generate plots and summary table, but plots may be overriden using no.plots argument.
 
-Default alpha value for post-estimation statistics is 0.05.
+Default alpha value for post-estimation statistics is 0.05, test results will suggest potential presence of residual problems at 0.2, but user discretion is needed (examined in tandam with the Residuals v Fitted plot).
 
 See 'itsa.model' documentation for further information.
 }

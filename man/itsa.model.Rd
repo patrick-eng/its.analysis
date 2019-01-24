@@ -25,17 +25,22 @@ itsa.model(data = NULL, time = NULL, depvar = NULL,
 
 \item{no.plots}{logical, specify whether function should return the ITSA plot, default is FALSE}
 }
+\value{
+Summary object is created in the global environment named itsa.fit which contains results and necessary information for running post-estimation itsa.postest function. It also contains the Time Series Interruption plot (itsa.plot).
+}
 \description{
 Sets up an Interrupted Time Series Analysis (ITSA) for analysing short time series data.
 }
 \details{
 This function provides a front door for the aov function in R's stats package, setting it up for running Interrupted Time Series Analysis (ITSA).
 
+Using the inputted variables, a Type-2 SS ANCOVA model is fitted which estimates the difference in means between interrupted and non-interrupted time periods, while accounting for the lag of the dependent variable and any further specified covariates.
+
+Users must be careful not to overfit covariates, and work with the rule of thumb that CVs < (0.1 * n) - (j - 1), where n is sample size and j is number of groups in the interruption variable.
+
 Variable names must be defined using quotation marks.
 
-Returns tables of time-group means (including counts and standard deviations), results from analysis of variance, and a summary of the result. If there is suggestion of normality/homoscedasticity assumption violation in the model, a warning message will appear.
-
-Summary object is created in the global environment named itsa.fit which contains results and necessary information for running post-estimation itsa.postest function. It also contains the Time Series Interruption plot (itsa.plot).
+Returns tables of time-group means (including counts and standard deviations), results from analysis of variance, and a summary of the result (relative to user defined alpha). If there is suggestion of normality/homoscedasticity assumption violation in the model, a warning message will appear.
 
 If any of data, depvar, interrupt_var, or time are undefined, the function will stop and an error message will appear
 }
@@ -63,8 +68,6 @@ covariate_one = "cov1", alpha=0.1)
 # Example no significant result
 itsa.model(data=x, time="year", depvar="cov1", interrupt_var = "interruption", alpha=0.05)
 
-# Example warning
-itsa.model(data=x, time="year", depvar="interruption", interrupt_var = "depv", alpha=0.1)
 
 }
 \keyword{analysis}
