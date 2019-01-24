@@ -1,12 +1,20 @@
-#' @details Interrupted Time Series Analysis (ITSA) serves as a replacement for traditional time series modelling techniques when sample sizes are too small for autocorrelation to be effectively estimated and then reduced without overfitting model parameters.
+#' @details Interrupted Time Series Analysis (ITSA) serves as a replacement for traditional time series modelling techniques when sample sizes are too small for such approaches (including ARIMA and OLS methods).
 #'
-#' The ITSA offered in this package is an AN(C)OVA model with a range of additional bolt-ons which provide further detailed information and test assumptions relative to time series analysis. See referenced paper for information on setting up data for ITSA.
+#' The ITSA model offered in this package is a Type-II sum-squares ANCOVA model with a range of additional bolt-ons which provide further detailed information and test assumptions relative to time series analysis. These include lagging the dependent variable as a covariate and estimating the autocorrelation functions of the model in post-hoc analysis.
 #'
-#' It is incumbent on the researcher to sensibly define interruption time periods, and to use caution when fitting covariates to shorter data series. A limit of two covariates is enforced by the model as the ability to reliably fit a third covariate would indicate a data series long enough to run more conventional time series models with.
+#' The key independent variable must, if it is not already, be converted into a factor whereby periods of significant change in the behaviour or direction of the variable are identified and coded as seperate factoral periods (with one numeric identifier for their entire length). This creates the 'interruption framework'. It is incumbent on the researcher to sensibly define time periods, and to be transparent (and ideally test alternative possibilities) in their write up.
+#'
+#' See referenced paper for detailed information on setting up data for ITSA.
+#'
+#' The ITSA model will automatically calculate and apply the lag of the dependent variable to as a covariate, accounting for the trend in the series itself before estimating the variance accounted for from the interruption. Further covariates may be specified, but caution should be used not to overfit:  Generally, the rule of thumb ought to be CVs < (0.1 * n) - (j - 1), where n is sample size and j is number of groups in the interruption variable. A limit of two covariates is enforced by the model as the ability to reliably fit a third covariate would indicate a data series long enough to run more conventional time series models with.
+#'
+#' A number of postestimation checks are ran on the model, including examining residual normality, homogenous variances, and residual autocorrelation. The results of each test can be seen using the itsa.postest function. If there is potential evidence of violation in the first two assumptions, a warning message will appear under the results from the itsa.model function. This warning does not necessarily mean that the model is invalid, but that researchers ought to run and pay careful attention to the results of the postestimation.
+#'
+#' Note: The package will handle time series where only two periods are defined (i.e. a 'normal' (0) period and an 'interrupted' (1) period). Users should also keep in mind that a minimum of between 7 and 10 cases per interruption variable level should ideally be followed to allow for enough power.
 #'
 #' @keywords internal
 #'
-#' @references English, P. (2019) 'Interrupted Time Series Analysis as a Solution to Short Time Series Data', SSRN.
+#' @references English, P. (2019) 'Interrupted Time Series Analysis as a Solution to Short Time Series Data', XXXX.
 #'
 "_PACKAGE"
 #> [1] "_PACKAGE"
