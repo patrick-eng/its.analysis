@@ -5,7 +5,7 @@ Version: 0.1.0
 Author: Patrick English
 Maintainer: Patrick English <p.english@exeter.ac.uk>
 Description: Two functions for running and then post-estimating an Interrupted Time Series Analysis model, which is a wrapper for the aov function. This is a solution for running time series analyses on temporally short data.
-Imports: plyr, car, stats, graphics, grDevices
+Imports: plyr, car, stats, graphics, grDevices, forecast
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
