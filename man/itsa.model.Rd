@@ -34,13 +34,13 @@ This function provides a front door for the aov function in R's stats package, s
 
 Using the inputted variables, a Type-2 SS ANCOVA model is fitted which estimates the difference in means between interrupted and non-interrupted time periods, while accounting for the lag of the dependent variable and any further specified covariates.
 
-Users must be careful not to overfit covariates, and work with the rule of thumb that CVs < (0.1 * n) - (j - 1), where n is sample size and j is number of groups in the interruption variable.
+Variable names must be defined using quotation marks. Any further covariates can be passed into the covariates argument, either as a single vector or list of vectors (both must be within the same data as the dependent and independent variables).
 
-Variable names must be defined using quotation marks.
+Returns tables of time period group means (including counts and standard deviations), results from analysis of variance (including R-squared), and a summary of the result (relative to user defined alpha).
 
-Returns tables of time-group means (including counts and standard deviations), results from analysis of variance, and a summary of the result (relative to user defined alpha). If there is suggestion of normality/homoscedasticity assumption violation in the model, a warning message will appear.
+If there is suggestion of ANOVA assumption violation in the model, a warning message will appear. These tests and further post-estimation can be done through the itsa.postest function.
 
-If any of data, depvar, interrupt_var, or time are undefined, the function will stop and an error message will appear
+If any of data, depvar, interrupt_var, or time are undefined, the function will stop and an error message will appear.
 }
 \examples{
 
