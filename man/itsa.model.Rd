@@ -5,8 +5,8 @@
 \title{Run Interrupted Time Series Analyses}
 \usage{
 itsa.model(data = NULL, time = NULL, depvar = NULL,
-  interrupt_var = NULL, covariate_one = NULL, covariate_two = NULL,
-  alpha = 0.05, no.plots = FALSE)
+  interrupt_var = NULL, covariates = NULL, alpha = 0.05,
+  no.plots = FALSE)
 }
 \arguments{
 \item{data}{define data}
@@ -17,9 +17,7 @@ itsa.model(data = NULL, time = NULL, depvar = NULL,
 
 \item{interrupt_var}{define interruption treatment/condition variable, must be a factor}
 
-\item{covariate_one}{specify a covariate control variable, default is NULL}
-
-\item{covariate_two}{specify a second covariate control variable, default is NULL}
+\item{covariates}{specify a covariate, or vector of covariates, default is NULL}
 
 \item{alpha}{desired alpha (p-value boundary of null hypothesis rejection), default is 0.05.}
 
@@ -63,7 +61,7 @@ itsa.model(data=x, time="year", depvar="depv", interrupt_var = "interruption", a
 
 # Add a covariate
 itsa.model(data=x, time="year", depvar="depv", interrupt_var = "interruption",
-covariate_one = "cov1", alpha=0.1)
+covariates = "cov1", alpha=0.1)
 
 # Example no significant result
 itsa.model(data=x, time="year", depvar="cov1", interrupt_var = "interruption", alpha=0.05)
