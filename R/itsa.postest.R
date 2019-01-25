@@ -21,7 +21,7 @@
 #'
 #' Default is to generate plots and summary table, but plots may be overriden using no.plots argument.
 #'
-#' Default alpha value for post-estimation statistics is 0.05, test results will suggest potential presence of residual problems at 0.2, but user discretion is needed (examined in tandam with the Residuals v Fitted plot).
+#' Default alpha value for post-estimation statistics is 0.05, test results will suggest potential presence of problems at higher values, but user discretion is needed (examined in tandam with the Residuals v Fitted plot).
 #'
 #' See 'itsa.model' documentation for further information.
 
@@ -54,11 +54,11 @@ itsa.postest <- function(model = NULL, no.plots = FALSE, alpha = 0.05) {
     # ACF plot
     forecast::Acf(model$residuals, main="ITSA Autocorrelation Plot")
 
-    # Residual v Factor Boxplot
-    graphics::boxplot(model$residuals ~ model$interrupt_var,
-            main="ITSA Residual Variances",
-            xlab="Time Period",
-            ylab="ITSA Residuals")
+    # DV v Factor Boxplot
+    graphics::boxplot(model$dependent ~ model$interrupt_var,
+                      main="Group Variances",
+                      xlab="Time Period",
+                      ylab="Dependent Variable")
     graphics::mtext(ltest_ob, side=3)
 
 
@@ -76,15 +76,15 @@ itsa.postest <- function(model = NULL, no.plots = FALSE, alpha = 0.05) {
 
     if(stest < alpha){
       stest_r <- "Non-normality present"
-      }
+    }
     else{
       if(stest < alpha * 4){
         stest_r <- "Non-normality could be present"
-    }
+      }
 
-    else{
-      stest_r <- "Non-normality not present"
-    }
+      else{
+        stest_r <- "Non-normality not present"
+      }
     }
 
 
@@ -92,7 +92,7 @@ itsa.postest <- function(model = NULL, no.plots = FALSE, alpha = 0.05) {
       ltest_r <- "Heterogenous variances present"
     }
     else{
-      if(ltest < alpha * 4){
+      if(ltest < alpha * 2){
         ltest_r <- "Heterogenous variances could be present"
       }
 

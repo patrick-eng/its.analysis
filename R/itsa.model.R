@@ -6,8 +6,7 @@
 #' @param time define time variable, must either be numeric (such as a year) or of class date
 #' @param depvar define dependent variable, must be continuous
 #' @param interrupt_var define interruption treatment/condition variable, must be a factor
-#' @param covariate_one specify a covariate control variable, default is NULL
-#' @param covariate_two specify a second covariate control variable, default is NULL
+#' @param covariates specify a covariate, or vector of covariates, default is NULL
 #' @param alpha desired alpha (p-value boundary of null hypothesis rejection), default is 0.05.
 #' @param no.plots logical, specify whether function should return the ITSA plot, default is FALSE
 #' @return Summary object is created in the global environment named itsa.fit which contains results and necessary information for running post-estimation itsa.postest function. It also contains the Time Series Interruption plot (itsa.plot).
@@ -34,7 +33,7 @@
 #'
 #' # Add a covariate
 #' itsa.model(data=x, time="year", depvar="depv", interrupt_var = "interruption",
-#' covariate_one = "cov1", alpha=0.1)
+#' covariates = "cov1", alpha=0.1)
 #'
 #' # Example no significant result
 #' itsa.model(data=x, time="year", depvar="cov1", interrupt_var = "interruption", alpha=0.05)
@@ -54,7 +53,7 @@
 
 
 itsa.model <- function(data = NULL, time = NULL, depvar = NULL, interrupt_var = NULL,
-                       covariate_one = NULL, covariate_two = NULL, alpha = 0.05, no.plots=FALSE) {
+                       covariates = NULL, alpha = 0.05, no.plots=FALSE) {
 
   ## Save global options and set new ones
   default_ops <- options()
@@ -81,29 +80,22 @@ itsa.model <- function(data = NULL, time = NULL, depvar = NULL, interrupt_var = 
 
   ## Assign values
 
-  if(missing(covariate_one) & missing(covariate_two)){
+  if(missing(covariates)){
 
     x <- data.frame(depvar=data[,depvar],
                     interrupt_var=as.factor(data[,interrupt_var]))
 
   }
 
-  else{
+  else {
+    x <- data.frame(depvar=data[,depvar],
+                    interrupt_var=as.factor(data[,interrupt_var]))
 
-    if(missing(covariate_two)){
-      x <- data.frame(depvar=data[,depvar],
-                      interrupt_var=as.factor(data[,interrupt_var]),
-                      covariate_one=data[,covariate_one])
-
-    }
-
-    else {
-      x <- data.frame(depvar=data[,depvar],
-                      interrupt_var=as.factor(data[,interrupt_var]),
-                      covariate_one=data[,covariate_one],
-                      coveriate_two=data[,covariate_two])
+    for(i in covariates){
+      x[,i] <- data[,i]
     }
   }
+
 
   ## Build object for means
 
@@ -153,6 +145,8 @@ itsa.model <- function(data = NULL, time = NULL, depvar = NULL, interrupt_var = 
 
   ## Build ANCOVA summary objects
 
+  adjr_sq <- round(summary(stats::lm(data = x, depvar ~ .))$adj.r.squared, digits=4)
+
   model <- stats::aov(data = x, depvar ~ .)
 
   ITSModResult <- car::Anova(model, type=2)
@@ -160,7 +154,7 @@ itsa.model <- function(data = NULL, time = NULL, depvar = NULL, interrupt_var = 
   stest <- stats::shapiro.test(model$residuals)
   stest_r <- round(stest[["p.value"]], digits=4)
 
-  ltest <- car::leveneTest(model$residuals ~ x$interrupt_var)
+  ltest <- car::leveneTest(x$depvar ~ x$interrupt_var)
   ltest_r <- round((ltest[1,3]), digits=4)
 
   result <- ifelse(ITSModResult$`Pr(>F)`[1] < alpha,
@@ -202,6 +196,8 @@ itsa.model <- function(data = NULL, time = NULL, depvar = NULL, interrupt_var = 
   cat(paste('', '\n', '\n'))
   cat(paste('Analysis of Variances:', '\n'))
   print(ITSModResult)
+  cat(paste('', '\n'))
+  cat(paste('Model Adjusted R-Sqaured:', adjr_sq, '\n'))
   cat(paste('', '\n'))
   cat(paste('Result:', result, '( <',alpha,')', '\n'))
   cat(paste('', '\n'))
