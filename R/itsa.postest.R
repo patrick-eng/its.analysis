@@ -21,11 +21,13 @@
 #'
 #' Default is to generate plots and summary table, but plots may be overriden using no.plots argument.
 #'
-#' Default alpha value for post-estimation statistics is 0.05, test results will suggest potential presence of problems at higher values, but user discretion is needed (examined in tandam with the Residuals v Fitted plot).
+#' Default alpha value for post-estimation statistics is 0.05, test results will suggest potential presence of problems at higher values (and also at higher levels relative to a user-inputted alpha), but user discretion is needed (examined in tandam with the Residuals v Fitted plot).
 #'
 #' See 'itsa.model' documentation for further information.
 
 itsa.postest <- function(model = NULL, no.plots = FALSE, alpha = 0.05) {
+
+  set.seed(1)
 
   if(missing(model)) {
     model <- itsa.fit

@@ -58,6 +58,7 @@ itsa.model <- function(data = NULL, time = NULL, depvar = NULL, interrupt_var = 
   ## Save global options and set new ones
   default_ops <- options()
   options(show.signif.stars = FALSE, contrasts = c("contr.sum","contr.poly"))
+  set.seed(1)
 
 
   ## Check variable specifications
