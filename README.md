@@ -25,12 +25,12 @@ Included in this repository is some test data for analysis.
 Country_Data.csv is a fake database from three made-up countries, with 30 annual reports of subjective economic well-being, GDP per capita, and unemployment rates. The examples demonstrate how the ITSA model will handle and then post-estimate different pastterns of time series trends and interruptions. Note, data can only be handled one-strata (country, region, etc) at a time, so it will be neccessary to subset this test data and any other cross-sectional data before running the functions.
 
 The prepared data contains the following variables: 
-country - 
-year -
-subjective_econ - aggregate annual perceptions of economic well-being
-gdp_pc - GDP per capita (original independent variable series)
-crisis_treatment - gdp_pc recoded as a factor, covering non-crisis (0), crisis (1), and post-crisis (2) periods
-unemp_perc - a covariate, unemployment percentage
-left_gov - another covariate, this time a dummy for the presence of a left-wing government
+<br /> country - 
+<br /> year -
+<br /> subjective_econ - aggregate annual perceptions of economic well-being
+<br /> gdp_pc - GDP per capita (original independent variable series)
+<br /> crisis_treatment - gdp_pc recoded as a factor, covering non-crisis (0), crisis (1), and post-crisis (2) periods
+<br /> unemp_perc - a covariate, unemployment percentage
+<br /> left_gov - another covariate, this time a dummy for the presence of a left-wing government
 
 I am incredibly grateful for any and all suggestions and feedback on the model and its performance. It would be fantastic to hear about users' experiences applying this to their own data/other data they have access to.
