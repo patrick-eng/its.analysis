@@ -24,9 +24,9 @@ This function runs and reports post-estimation tests on fits from the itsa.model
 
 Main tests are whether two key ANCOVA assumptions are met, and an additional autocorrelation test for the time series framework.
 
-The Shaprio-Wilks test examines the residuals from the fitted model for normality. A p-value less than alpha indicates abnormal residuals.
+The Shaprio-Wilks test examines the residuals from the fitted model for abnormality. A p-value less than alpha indicates abnormal residuals.
 
-The Levene's Test makes sure that there are equal variances between the treated groups. A p-value less than alpha indicates hetrogenous variances.
+The Levene's Test makes sure that there are equal variances between the treated groups. A p-value less than alpha indicates heterogeneous variances.
 
 A QQ-Norm and Boxplot are generated with the test results overlaid (respectively), with a Residual v Fitted and Autocorrelation Function Plot also generated.
 
