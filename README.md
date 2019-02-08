@@ -33,4 +33,13 @@ The prepared data contains the following variables:
 <br /> unemp_perc - a covariate, unemployment percentage
 <br /> left_gov - another covariate, this time a dummy for the presence of a left-wing government
 
-I am incredibly grateful for any and all suggestions and feedback on the model and its performance. It would be fantastic to hear about users' experiences applying this to their own data/other data they have access to.
+Monthly_Data.csv contains further fake data covering monthly public support for interventionist economic policies during a period of high unemployment, in which the mass media took three very distinct positions on government policy over the course of 28 months. The research question here is: does media coverage drive public opinion on government economic intervention? This particular dataset demonstrates a cautious positive result, with significant difference detected at alpha of 0.1. This compares to an OLS model with the continious version of the data (significant relationship at p < 0.01 for simple relationships, at p < 0.05 including lagged DV and trend variable). 
+
+The five variables are:
+<br /> date - 
+<br /> public_opinion - aggregate public preferences in favour of the policy
+<br /> media_position - an index of media favourability/hostility toward the policy
+<br /> media_period - a factorised version of media_poisition for the its.analysis model
+<br /> unemployment - unemployment as % of the workforce
+
+I am incredibly grateful for any and all suggestions and feedback on the model and its performance. It would be fantastic to hear about users' experiences applying this to their own data/other data they have access to and any obvious Type I or Type II errors encountered.
