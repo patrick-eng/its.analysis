@@ -18,7 +18,7 @@ The dependent variable must be a continuous vector, and the independent variable
 
 Covariates may be fit using the covariates argument in the model function, which both increases the power of the test (by accounting for more variance) and also adjusts the variance explained by the factoral independent variable (controlling for the competing variance of the covariate). Users should be sensible in the number of covariates fitted, and keep in mind normal assumptions regarding multicolinearity and interaction between covariates. 
 
-Various post-estimation proceedures can be ran using the itsa.postest() function. These include: a Shapiro-Wilks test for residual normality (overlaid on a QQ-Norm plot), a Levene's Test of heterogenous variances (overlain on a boxplot), a resdiual v fitted plot, and an autocorrelation function plot. These are designed to test typical AN(C)OVA and time series model assumptions.
+Various post-estimation proceedures can be ran using the itsa.postest() function. These include: a Shapiro-Wilks test for residual abnormality (overlaid on a QQ-Norm plot), a Levene's Test of heterogeneous variances (overlain on a boxplot), a resdiual v fitted plot, and an autocorrelation function plot. These are designed to test typical AN(C)OVA and time series model assumptions.
 
 Included in this repository is some test data for analysis. 
 
