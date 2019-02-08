@@ -58,7 +58,6 @@ itsa.model <- function(data = NULL, time = NULL, depvar = NULL, interrupt_var = 
   ## Save global options and set new ones
   default_ops <- options()
   options(show.signif.stars = FALSE, contrasts = c("contr.sum","contr.poly"))
-  set.seed(1)
 
 
   ## Check variable specifications
@@ -162,11 +161,14 @@ itsa.model <- function(data = NULL, time = NULL, depvar = NULL, interrupt_var = 
                    "Significant variation between time periods with chosen alpha",
                    "No significant variation between time periods with chosen alpha")
 
-  post_sums <- ifelse((stest_r < 0.2 | ltest_r < 0.2),
-                      "Warning: ANCOVA Result may be biased by abnormality in residuals or heterogenous variances.
+  post_sums <- ifelse((stest_r < 0.2 | ltest_r < 0.15),
+                      "Warning: ANCOVA Result may be biased by abnormality in residuals or heterogeneous variances.
                       Please check post-estimation.",
                       "")
 
+  post_sums_s <- ifelse((stest_r < 0.2 | ltest_r < 0.15),
+                        "Post-Est Warning",
+                        "No Post-Est Warning")
 
   ## Build object for summary
 
@@ -181,6 +183,8 @@ itsa.model <- function(data = NULL, time = NULL, depvar = NULL, interrupt_var = 
   itsa.fit$fitted.values <<- model$fitted.values
   itsa.fit$shapiro.test <<- stest_r
   itsa.fit$levenes.test <<- ltest_r
+  itsa.fit$post_sums <<- post_sums_s
+  itsa.fit$adjr_sq <<- adjr_sq
 
   if(no.plots==FALSE) {
 
@@ -198,11 +202,12 @@ itsa.model <- function(data = NULL, time = NULL, depvar = NULL, interrupt_var = 
   cat(paste('Analysis of Variances:', '\n'))
   print(ITSModResult)
   cat(paste('', '\n'))
-  cat(paste('Model Adjusted R-Sqaured:', adjr_sq, '\n'))
+  cat(paste('Model Adjusted R-Squared:', adjr_sq, '\n'))
   cat(paste('', '\n'))
   cat(paste('Result:', result, '( <',alpha,')', '\n'))
   cat(paste('', '\n'))
   cat(post_sums)
+  cat(paste('', '\n'))
 
   ## reset global options
   options(default_ops)

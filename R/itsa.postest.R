@@ -13,9 +13,9 @@
 #'
 #' Main tests are whether two key ANCOVA assumptions are met, and an additional autocorrelation test for the time series framework.
 #'
-#' The Shaprio-Wilks test examines the residuals from the fitted model for normality. A p-value less than alpha indicates abnormal residuals.
+#' The Shaprio-Wilks test examines the residuals from the fitted model for abnormality. A p-value less than alpha indicates abnormal residuals.
 #'
-#' The Levene's Test makes sure that there are equal variances between the treated groups. A p-value less than alpha indicates hetrogenous variances.
+#' The Levene's Test makes sure that there are equal variances between the treated groups. A p-value less than alpha indicates heterogeneous variances.
 #'
 #' A QQ-Norm and Boxplot are generated with the test results overlaid (respectively), with a Residual v Fitted and Autocorrelation Function Plot also generated.
 #'
@@ -26,8 +26,6 @@
 #' See 'itsa.model' documentation for further information.
 
 itsa.postest <- function(model = NULL, no.plots = FALSE, alpha = 0.05) {
-
-  set.seed(1)
 
   if(missing(model)) {
     model <- itsa.fit
@@ -44,8 +42,8 @@ itsa.postest <- function(model = NULL, no.plots = FALSE, alpha = 0.05) {
 
 
     # Result text objects
-    stest_ob <- paste("Shapiro-Wilk Test of Residual Normality: p =", model$shapiro.test)
-    ltest_ob <- paste("Levene's Test of Homogenous Variances: p =", model$levenes.test)
+    stest_ob <- paste("Shapiro-Wilk Test of Abnormality: p =", model$shapiro.test)
+    ltest_ob <- paste("Levene's Test of Heterogeneous Variances: p =", model$levenes.test)
 
     # Residual v Fitted
     graphics::plot(model$fitted.values, model$residuals,
@@ -91,15 +89,15 @@ itsa.postest <- function(model = NULL, no.plots = FALSE, alpha = 0.05) {
 
 
     if(ltest < alpha){
-      ltest_r <- "Heterogenous variances present"
+      ltest_r <- "Heterogeneous variances present"
     }
     else{
       if(ltest < alpha * 2){
-        ltest_r <- "Heterogenous variances could be present"
+        ltest_r <- "Heterogeneous variances could be present"
       }
 
       else{
-        ltest_r <- "Heterogenous variances not present"
+        ltest_r <- "Heterogeneous variances not present"
       }
     }
 
@@ -125,7 +123,7 @@ itsa.postest <- function(model = NULL, no.plots = FALSE, alpha = 0.05) {
     ltest <- model$levenes.test
 
     stest_r <- ifelse(stest < alpha, "Non-normality present", "Non-normality not present")
-    ltest_r <- ifelse(ltest < alpha, "Heterogenous variance present", "Heterogenous variance not present")
+    ltest_r <- ifelse(ltest < alpha, "Heterogeneous variances present", "Heterogeneous variances not present")
 
     x <- c("Shapiro-Wilk", "Levene's")
     p <- c(stest, ltest)
