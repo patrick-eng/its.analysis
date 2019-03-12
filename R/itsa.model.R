@@ -47,7 +47,7 @@
 #'
 #' Returns tables of time period group means (including counts and standard deviations), results from analysis of variance (including R-squared), and a summary of the result (relative to user defined alpha).
 #'
-#' If there is suggestion of ANOVA assumption violation in the model, a warning message will appear. These tests and further post-estimation can be done through the itsa.postest function.
+#' If there is suggestion of ANOVA assumption violation in the model, or evidence of residual autocorrelation, a warning message will appear. These tests and further post-estimation can be done through the itsa.postest function.
 #'
 #' If any of data, depvar, interrupt_var, or time are undefined, the function will stop and an error message will appear.
 
@@ -154,19 +154,31 @@ itsa.model <- function(data = NULL, time = NULL, depvar = NULL, interrupt_var = 
   stest <- stats::shapiro.test(model$residuals)
   stest_r <- round(stest[["p.value"]], digits=4)
 
+  acf.test <- forecast::taperedacf(model$residuals, lag.max = 5, plot=FALSE)
+
+  acf.data <- cbind(acf.test$z, acf.test$upper, acf.test$lower)
+
+  acf.results <- as.matrix(ifelse((acf.data[,1] < acf.data[,3] | acf.data[,1] > acf.data[,2]), "FAIL", "PASS"))
+
+  acf.out <- ifelse("FAIL" %in% acf.results[1:3,1], "Evidence of autocorrelation", "No autocorrelation evidence")
+
+
   ltest <- car::leveneTest(x$depvar ~ x$interrupt_var)
   ltest_r <- round((ltest[1,3]), digits=4)
+
+
 
   result <- ifelse(ITSModResult$`Pr(>F)`[1] < alpha,
                    "Significant variation between time periods with chosen alpha",
                    "No significant variation between time periods with chosen alpha")
 
-  post_sums <- ifelse((stest_r < 0.2 | ltest_r < 0.15),
-                      "Warning: ANCOVA Result may be biased by abnormality in residuals or heterogeneous variances.
-                      Please check post-estimation.",
+  post_sums <- ifelse((stest_r < 0.2 | ltest_r < 0.15 | acf.out == "Evidence of autocorrelation"),
+                      "Warning: ANCOVA Result may be biased. Please check post-estimation.",
                       "")
 
-  post_sums_s <- ifelse((stest_r < 0.2 | ltest_r < 0.15),
+
+
+  post_sums_s <- ifelse((stest_r < 0.2 | ltest_r < 0.15 | acf.out == "Evidence of autocorrelation"),
                         "Post-Est Warning",
                         "No Post-Est Warning")
 
@@ -183,6 +195,7 @@ itsa.model <- function(data = NULL, time = NULL, depvar = NULL, interrupt_var = 
   itsa.fit$fitted.values <<- model$fitted.values
   itsa.fit$shapiro.test <<- stest_r
   itsa.fit$levenes.test <<- ltest_r
+  itsa.fit$autcorr <<- acf.out
   itsa.fit$post_sums <<- post_sums_s
   itsa.fit$adjr_sq <<- adjr_sq
 
