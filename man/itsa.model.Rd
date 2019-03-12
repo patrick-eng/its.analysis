@@ -38,7 +38,7 @@ Variable names must be defined using quotation marks. Any further covariates can
 
 Returns tables of time period group means (including counts and standard deviations), results from analysis of variance (including R-squared), and a summary of the result (relative to user defined alpha).
 
-If there is suggestion of ANOVA assumption violation in the model, a warning message will appear. These tests and further post-estimation can be done through the itsa.postest function.
+If there is suggestion of ANOVA assumption violation in the model, or evidence of residual autocorrelation, a warning message will appear. These tests and further post-estimation can be done through the itsa.postest function.
 
 If any of data, depvar, interrupt_var, or time are undefined, the function will stop and an error message will appear.
 }
