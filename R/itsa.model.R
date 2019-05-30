@@ -217,7 +217,7 @@ itsa.model <- function(data = NULL, time = NULL, depvar = NULL, interrupt_var = 
   cat(paste('', '\n'))
   cat(paste('Model Adjusted R-Squared:', adjr_sq, '\n'))
   cat(paste('', '\n'))
-  cat(paste('Result:', result, '( <',alpha,')', '\n'))
+  cat(paste('Result: ', result, ' (<', alpha,')', '\n', sep =""))
   cat(paste('', '\n'))
   cat(post_sums)
   cat(paste('', '\n'))
