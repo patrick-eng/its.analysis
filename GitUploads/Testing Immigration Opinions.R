@@ -1,6 +1,7 @@
 ##### British immigration opinions #####
+library(ggplot2)
 
-t.dat <- read.csv("publicopinioneexample.csv")
+t.dat <- read.csv("/Users/patrickenglish/Documents/ITS 2019/publicopinioneexample_2.csv")
 
 head(t.dat)
 
@@ -13,7 +14,7 @@ g <- ggplot(data=t.dat, aes(y=immigration, x=year))
 (graph <- g + geom_line())
 
 (graph <- graph + geom_segment(x=1997, y=100, xend=1997, yend=700, color="red") + 
-  geom_segment(x=2004, y=100, xend=2004, yend=700, color="red") + theme_bw()) 
+    geom_segment(x=2004, y=100, xend=2004, yend=700, color="red") + theme_bw()) 
 
 
 
@@ -21,25 +22,27 @@ g <- ggplot(data=t.dat, aes(y=immigration, x=year))
 t.dat$public_opinion2 <- scale(t.dat$public_opinion)
 
 
-itsa.model(data=t.dat, time="year", depvar="public_opinion2", interrupt_var = "interruption")
+model <- itsa.model(data=t.dat, time="year", depvar="public_opinion2", interrupt_var = "interruption")
 
-itsa.postest()
+
+itsa.postest(model)
 
 
 ## run model (two-way)
 
 t.dat$interruption_2 <- ifelse(t.dat$year < 1997, 0, 1)
 
-itsa.model(data=t.dat, time="year", depvar="public_opinion", interrupt_var = "interruption_2")
+model <- itsa.model(data=t.dat, time="year", depvar="public_opinion", interrupt_var = "interruption_2")
 
-itsa.postest()
+itsa.postest(model)
 
 
 
 
 
 ## Check interaction - not significant, original model applies
+t.dat$lag_y <-c(NA, t.dat$public_opinion[1:(length(t.dat$public_opinion)-1)])
 
 t.dat$interact <- t.dat$interruption * t.dat$lag_y 
 
-itsa.model(data=t.dat, time="year", depvar="public_opinion", interrupt_var = "interruption_2", covariates = "interact")
+model <- itsa.model(data=t.dat, time="year", depvar="public_opinion", interrupt_var = "interruption_2", covariates = "interact")
