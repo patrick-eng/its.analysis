@@ -1,12 +1,12 @@
 Package: its.analysis
 Type: Package
 Title: Running Interrupted Time Series Analysis
-Version: 0.1.0
+Version: 1.4.0
 Author: Patrick English
 Maintainer: Patrick English <p.english@exeter.ac.uk>
-Description: Two functions for running and then post-estimating an Interrupted Time Series Analysis model, which is a wrapper for the aov function. This is a solution for running time series analyses on temporally short data.
-Imports: plyr, car, stats, graphics, grDevices, forecast
-License: file LICENSE
+Description: Two functions for running and then post-estimating an Interrupted Time Series Analysis model. This is a solution for running time series analyses on temporally short data. See English (2019) 'The its.analysis R package - Modelling short time series data' <https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3398189> for an overview of the method.
+Imports: plyr, car, stats, graphics, grDevices, forecast, boot, ggplot2
+License: MIT + file LICENCE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 6.1.1.9000

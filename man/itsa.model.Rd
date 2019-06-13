@@ -6,25 +6,31 @@
 \usage{
 itsa.model(data = NULL, time = NULL, depvar = NULL,
   interrupt_var = NULL, covariates = NULL, alpha = 0.05,
-  no.plots = FALSE)
+  no.plots = FALSE, bootstrap = TRUE, Reps = 1000, print = TRUE)
 }
 \arguments{
-\item{data}{define data}
+\item{data}{define data.}
 
-\item{time}{define time variable, must either be numeric (such as a year) or of class date}
+\item{time}{define time variable, must either be numeric (such as a year) or of class date.}
 
-\item{depvar}{define dependent variable, must be continuous}
+\item{depvar}{define dependent variable, must be continuous.}
 
-\item{interrupt_var}{define interruption treatment/condition variable, must be a factor}
+\item{interrupt_var}{define interruption treatment/condition variable, must be a factor.}
 
-\item{covariates}{specify a covariate, or vector of covariates, default is NULL}
+\item{covariates}{specify a covariate, or vector of covariates, default is NULL.}
 
 \item{alpha}{desired alpha (p-value boundary of null hypothesis rejection), default is 0.05.}
 
-\item{no.plots}{logical, specify whether function should return the ITSA plot, default is FALSE}
+\item{no.plots}{logical, specify that function should not return the ITSA plot, default is FALSE.}
+
+\item{bootstrap}{logical, specify where function should run bootstrap estimations of F-values and return table of results, default is TRUE.}
+
+\item{Reps}{define number of replications for bootstrapping, default is 1000.}
+
+\item{print}{logical, specify whether the main model result should be printed to the console.}
 }
 \value{
-Summary object is created in the global environment named itsa.fit which contains results and necessary information for running post-estimation itsa.postest function. It also contains the Time Series Interruption plot (itsa.plot).
+returns a large list which can be assigned to the global environment, containing results and necessary information for running post-estimation itsa.postest function. It also contains the Time Series Interruption plot (itsa.plot) and bootstrap results, if applied.
 }
 \description{
 Sets up an Interrupted Time Series Analysis (ITSA) for analysing short time series data.
@@ -32,15 +38,21 @@ Sets up an Interrupted Time Series Analysis (ITSA) for analysing short time seri
 \details{
 This function provides a front door for the aov function in R's stats package, setting it up for running Interrupted Time Series Analysis (ITSA).
 
-Using the inputted variables, a Type-2 SS ANCOVA model is fitted which estimates the difference in means between interrupted and non-interrupted time periods, while accounting for the lag of the dependent variable and any further specified covariates.
+Using the inputted variables, a Type-2 Sum Squares ANCOVA Lagged Dependent Variable model is fitted which estimates the difference in means between interrupted and non-interrupted time periods, while accounting for the lag of the dependent variable and any further specified covariates.
 
-Variable names must be defined using quotation marks. Any further covariates can be passed into the covariates argument, either as a single vector or list of vectors (both must be within the same data as the dependent and independent variables).
+The function includes a bootstrap model by default, which runs 1000 replications of the main model with randomly drawn samples. A trimmed mean (10% removed) F-value is reported and a bootstrapped p-value derived from it. Users may turn off the bootstrapping model, or the number of replications for the bootstrap model to pass through can be altered using the Reps argument.
 
-Returns tables of time period group means (including counts and standard deviations), results from analysis of variance (including R-squared), and a summary of the result (relative to user defined alpha).
+Variable names must be defined using quotation marks. Any number of covariates can be passed into the covariates argument as a list of vectors (both must be within the same data as the dependent and independent variables).
 
-If there is suggestion of ANOVA assumption violation in the model, or evidence of residual autocorrelation, a warning message will appear. These tests and further post-estimation can be done through the itsa.postest function.
+Also returned as warning messages are the results of ANOVA and residual autocorrelation assumptions check ran in the background, if any are potentially violated. These tests and further post-estimation can be done through the itsa.postest function.
 
-If any of data, depvar, interrupt_var, or time are undefined, the function will stop and an error message will appear.
+Returns to console the results from analysis of variance test, results of the F-value bootstrap model, and a summary of the result (relative to user defined alpha) and any assumption violation warnings.
+
+Also returns a plot to the plot window graphing the dependent variable time series and interruption points. As this is a ggplot2 generated object, users can call the plot and make further customisations to it as an output.
+
+Assigning to an object will return a list of all of the above, plus further tests including a Tukey Honest Significant Differences test, the data and arguments set by the user, a table of time-series group means,, the full bootstrap model results and results of assumptions tests, and the full list of residual and fitted values.
+
+If any of data, depvar, interrupt_var, or time are undefined, the process will stop and an error message will appear.
 }
 \examples{
 
@@ -57,20 +69,20 @@ cov1 <- c(3.1, 3.3, 5.1, 5.2, 5.4, 4.5, 4.7, 4.9, 5.3,
 x <- as.data.frame(cbind(year, depv, interruption, cov1))
 
 # First example model
-itsa.model(data=x, time="year", depvar="depv", interrupt_var = "interruption", alpha=0.01)
-
-# Add a covariate
 itsa.model(data=x, time="year", depvar="depv", interrupt_var = "interruption",
-covariates = "cov1", alpha=0.1)
+alpha=0.05, bootstrap=TRUE, Reps = 250)
 
-# Example no significant result
-itsa.model(data=x, time="year", depvar="cov1", interrupt_var = "interruption", alpha=0.05)
+# Add a covariate, change alpha to 0.1
+itsa.model(data=x, time="year", depvar="depv", interrupt_var = "interruption",
+covariates = "cov1", alpha=0.1, bootstrap=TRUE, Reps = 250)
+
+# Force no plots and turn off bootstrap
+itsa.model(data=x, time="year", depvar="depv", interrupt_var = "interruption",
+covariates = "cov1", alpha=0.1, no.plots=TRUE, bootstrap=FALSE)
+
+# Example of no significant result
+itsa.model(data=x, time="year", depvar="cov1", interrupt_var = "interruption",
+ alpha=0.05, bootstrap=FALSE)
 
 
 }
-\keyword{analysis}
-\keyword{interrupted}
-\keyword{of}
-\keyword{series,}
-\keyword{time}
-\keyword{variance}

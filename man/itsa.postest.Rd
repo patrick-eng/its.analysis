@@ -4,17 +4,22 @@
 \alias{itsa.postest}
 \title{Post-estimating ITSA models}
 \usage{
-itsa.postest(model = NULL, no.plots = FALSE, alpha = 0.05)
+itsa.postest(model = NULL, no.plots = FALSE, alpha = 0.05,
+  bootstrap = TRUE, print = TRUE)
 }
 \arguments{
-\item{model}{define ITSA model results object, default is output from itsa.model function}
+\item{model}{define ITSA model results object.}
 
-\item{no.plots}{logical, specify whether function should present post-estimation plots (default is FALSE)}
+\item{no.plots}{logical, specify whether function should present post-estimation plots (default is FALSE).}
 
-\item{alpha}{define alpha level for test statistics, default is 0.05}
+\item{alpha}{define alpha level for test statistics, default is 0.05.}
+
+\item{bootstrap}{logical, declare if itsa.model was bootstrapped for plot of these results.}
+
+\item{print}{logical, specify whether the main model result should be printed to the console.}
 }
 \value{
-if no.plots is not forced, will return a table to the console and two plots to the plot tab
+returns a list containing post-estimation test results and four plots (plus one additional if bootstrapping applied) which are also sent directly to the plot tab.
 }
 \description{
 Function to produce post-estimation plots from the itsa.model function.
@@ -30,16 +35,11 @@ The Levene's Test makes sure that there are equal variances between the treated 
 
 A QQ-Norm and Boxplot are generated with the test results overlaid (respectively), with a Residual v Fitted and Autocorrelation Function Plot also generated.
 
+The results of bootstrap estimations in itsa.model will be plotted, unless argument is switched to FALSE.
+
 Default is to generate plots and summary table, but plots may be overriden using no.plots argument.
 
 Default alpha value for post-estimation statistics is 0.05, test results will suggest potential presence of problems at higher values (and also at higher levels relative to a user-inputted alpha), but user discretion is needed (examined in tandam with the Residuals v Fitted plot).
 
 See 'itsa.model' documentation for further information.
 }
-\keyword{analysis}
-\keyword{interrupted}
-\keyword{of}
-\keyword{post-estimation}
-\keyword{series,}
-\keyword{time}
-\keyword{variance,}
