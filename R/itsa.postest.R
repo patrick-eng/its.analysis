@@ -7,7 +7,7 @@
 #' @param alpha define alpha level for test statistics, default is 0.05.
 #' @param bootstrap logical, declare if itsa.model was bootstrapped for plot of these results.
 #' @param print logical, specify whether the main model result should be printed to the console.
-#' @return returns a list containing post-estimation test results and four plots (plus one additional if bootstrapping applied) which are also sent directly to the plot tab.
+#' @return Returns a list containing post-estimation test results and four plots (plus one additional if bootstrapping applied) which are also sent directly to the plot tab.
 #' @export itsa.postest
 #'
 #' @details This function runs and reports post-estimation tests on fits from the itsa.model function, and generates four plots.

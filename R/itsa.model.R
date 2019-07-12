@@ -12,7 +12,7 @@
 #' @param bootstrap logical, specify where function should run bootstrap estimations of F-values and return table of results, default is TRUE.
 #' @param Reps define number of replications for bootstrapping, default is 1000.
 #' @param print logical, specify whether the main model result should be printed to the console.
-#' @return returns a large list which can be assigned to the global environment, containing results and necessary information for running post-estimation itsa.postest function. It also contains the Time Series Interruption plot (itsa.plot) and bootstrap results, if applied.
+#' @return Returns a large list which can be assigned to the global environment, containing results and necessary information for running post-estimation itsa.postest function. It also contains the Time Series Interruption plot (itsa.plot) and bootstrap results, if applied.
 #' @export itsa.model
 #'
 #' @examples
@@ -46,21 +46,21 @@
 #'  alpha=0.05, bootstrap=FALSE)
 #'
 #'
-#' @details This function provides a front door for the aov function in R's stats package, setting it up for running Interrupted Time Series Analysis (ITSA).
+#' @details This function provides a front door for the aov function in R's stats package (via car's Anova), setting it up for running Interrupted Time Series Analysis (ITSA).
 #'
 #' Using the inputted variables, a Type-2 Sum Squares ANCOVA Lagged Dependent Variable model is fitted which estimates the difference in means between interrupted and non-interrupted time periods, while accounting for the lag of the dependent variable and any further specified covariates.
 #'
-#' The function includes a bootstrap model by default, which runs 1000 replications of the main model with randomly drawn samples. A trimmed mean (10% removed) F-value is reported and a bootstrapped p-value derived from it. Users may turn off the bootstrapping model, or the number of replications for the bootstrap model to pass through can be altered using the Reps argument.
+#' The function includes a bootstrap model by default, which runs 1000 replications of the main model with randomly drawn samples. A trimmed mean (10 percent removed) F-value is reported and a bootstrapped p-value derived from it. Users may turn off the bootstrapping model, or the number of replications for the bootstrap model to pass through can be altered using the Reps argument.
 #'
 #' Variable names must be defined using quotation marks. Any number of covariates can be passed into the covariates argument as a list of vectors (both must be within the same data as the dependent and independent variables).
 #'
 #' Also returned as warning messages are the results of ANOVA and residual autocorrelation assumptions check ran in the background, if any are potentially violated. These tests and further post-estimation can be done through the itsa.postest function.
 #'
-#' Returns to console the results from analysis of variance test, results of the F-value bootstrap model, and a summary of the result (relative to user defined alpha) and any assumption violation warnings.
+#' Returns to console the results from analysis of variance test, results of the F-value bootstrap model, and a summary of the result (relative to user defined alpha) and any assumption violation warnings. Users may force this return off by declaring print=FALSE in the model arguments.
 #'
 #' Also returns a plot to the plot window graphing the dependent variable time series and interruption points. As this is a ggplot2 generated object, users can call the plot and make further customisations to it as an output.
 #'
-#' Assigning to an object will return a list of all of the above, plus further tests including a Tukey Honest Significant Differences test, the data and arguments set by the user, a table of time-series group means,, the full bootstrap model results and results of assumptions tests, and the full list of residual and fitted values.
+#' Assigning to an object will return a list of all of the above, plus further tests including a Tukey Honest Significant Differences test, the data and arguments set by the user, a table of time-series group means, the full bootstrap model results and results of assumptions tests, and the full list of residual and fitted values.
 #'
 #' If any of data, depvar, interrupt_var, or time are undefined, the process will stop and an error message will appear.
 
@@ -142,11 +142,13 @@ itsa.model <- function(data = NULL, time = NULL, depvar = NULL, interrupt_var = 
 
     g <- ggplot2::ggplot(data=temp, ggplot2::aes(y=depvar, x=time))
 
-    graph <- g + ggplot2::geom_line() +
+    graph <- g + ggplot2::geom_line(group=1) +
       ggplot2::xlab("") +  ggplot2::ylab("Response Variable Levels") +  ggplot2::theme_bw()
 
     for(i in periods){
-    graph <- graph +  ggplot2::geom_segment(x=i, y=min(temp$depvar), xend=i, yend=max(temp$depvar), color="red", linetype=8)
+    graph <- graph +  ggplot2::geom_segment(x=i, y=min(temp$depvar),
+                                            xend=i, yend=max(temp$depvar), color="red", linetype=8) +
+      ggplot2::labs(title="Interrupted series plot", x="Time", y="Dependent series")
     }
 
     graphics::plot(graph)
