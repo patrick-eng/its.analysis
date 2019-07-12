@@ -19,7 +19,7 @@ itsa.postest(model = NULL, no.plots = FALSE, alpha = 0.05,
 \item{print}{logical, specify whether the main model result should be printed to the console.}
 }
 \value{
-returns a list containing post-estimation test results and four plots (plus one additional if bootstrapping applied) which are also sent directly to the plot tab.
+Returns a list containing post-estimation test results and four plots (plus one additional if bootstrapping applied) which are also sent directly to the plot tab.
 }
 \description{
 Function to produce post-estimation plots from the itsa.model function.
