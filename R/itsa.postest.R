@@ -14,17 +14,17 @@
 #'
 #' Main tests are whether two key ANCOVA assumptions are met, and an additional autocorrelation test for the time series framework.
 #'
-#' The Shaprio-Wilks test examines the residuals from the fitted model for abnormality. A p-value less than alpha indicates abnormal residuals.
+#' The Shapiro-Wilks test examines the residuals from the fitted model for abnormality. A p-value less than alpha indicates abnormal residuals. In this instance, the user should consider replicating the its.analysis model design using a non-parametric ANCOVA equivalent.
 #'
 #' The Levene's Test makes sure that there are equal variances between the treated groups. A p-value less than alpha indicates heterogeneous variances.
 #'
 #' A QQ-Norm and Boxplot are generated with the test results overlaid (respectively), with a Residual v Fitted and Autocorrelation Function Plot also generated.
 #'
-#' The results of bootstrap estimations in itsa.model will be plotted, unless argument is switched to FALSE.
+#' The results of bootstrap estimations in itsa.model will be plotted, unless argument is switched to FALSE. See plot.boot help file for assistance on interpreting these plots.
 #'
-#' Default is to generate plots and summary table, but plots may be overriden using no.plots argument.
+#' Default is to generate plots and summary table, but plots may be overridden using no.plots argument.
 #'
-#' Default alpha value for post-estimation statistics is 0.05, test results will suggest potential presence of problems at higher values (and also at higher levels relative to a user-inputted alpha), but user discretion is needed (examined in tandam with the Residuals v Fitted plot).
+#' Default alpha value for post-estimation statistics is 0.05, test results will suggest potential presence of problems at higher values (and also at higher levels relative to a user-defined alpha), but user discretion is needed (examined in tandem with the Residuals v Fitted plot).
 #'
 #' See 'itsa.model' documentation for further information.
 
@@ -50,7 +50,7 @@ itsa.postest <- function(model = NULL, no.plots = FALSE, alpha = 0.05, bootstrap
     ## Bootstrap plot
     if(bootstrap==TRUE){
 
-      graphics::plot(model$fstat.bootstrap, index=1)
+      plot(model$fstat.bootstrap, index=1)
       bootstrap.plot <- grDevices::recordPlot()
 
       }
@@ -65,7 +65,8 @@ itsa.postest <- function(model = NULL, no.plots = FALSE, alpha = 0.05, bootstrap
     graphics::plot(model$fitted.values, model$residuals,
                    main="ITSA Residuals v Fitted Plot",
                    xlab="ITSA Fitted Values",
-                   ylab="ITSA Residuals");graphics::abline(0,0, col="red")
+                   ylab="ITSA Residuals")
+    graphics::abline(0,0, col="red")
     residual.plot <- grDevices::recordPlot()
 
 
@@ -74,17 +75,21 @@ itsa.postest <- function(model = NULL, no.plots = FALSE, alpha = 0.05, bootstrap
     acf.plot <- grDevices::recordPlot()
 
 
-    # DV v Factor Boxplot
+    # DV v Factor boxplot
+    graphics::plot.new()
+
     graphics::boxplot(model$dependent ~ model$interrupt_var,
                       main="Group Variances",
                       xlab="Time Period",
-                      ylab="Dependent Variable");graphics::mtext(ltest_ob, side=3)
+                      ylab="Dependent Variable")
+    graphics::mtext(ltest_ob, side=3)
     variance.plot <- grDevices::recordPlot()
 
 
     # QQ-Norm plot
     stats::qqnorm(model$residuals,
-                  main="ITSA QQ-Norm Plot");stats::qqline(model$residuals, col="red")
+                  main="ITSA QQ-Norm Plot")
+    stats::qqline(model$residuals, col="red")
     graphics::mtext(stest_ob, side=3)
     qqnorm.plot <- grDevices::recordPlot()
 
@@ -95,7 +100,7 @@ itsa.postest <- function(model = NULL, no.plots = FALSE, alpha = 0.05, bootstrap
     ltest <- model$levenes.test
 
     if(stest < alpha){
-      stest_r <- "Non-normality present"
+      stest_r <- "Non-normality present. Consider a non-parametric alternative test."
     }
     else{
       if(stest < alpha * 4){
