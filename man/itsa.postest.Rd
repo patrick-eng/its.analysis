@@ -4,8 +4,13 @@
 \alias{itsa.postest}
 \title{Post-estimating ITSA models}
 \usage{
-itsa.postest(model = NULL, no.plots = FALSE, alpha = 0.05,
-  bootstrap = TRUE, print = TRUE)
+itsa.postest(
+  model = NULL,
+  no.plots = FALSE,
+  alpha = 0.05,
+  bootstrap = TRUE,
+  print = TRUE
+)
 }
 \arguments{
 \item{model}{define ITSA model results object.}
@@ -29,17 +34,17 @@ This function runs and reports post-estimation tests on fits from the itsa.model
 
 Main tests are whether two key ANCOVA assumptions are met, and an additional autocorrelation test for the time series framework.
 
-The Shaprio-Wilks test examines the residuals from the fitted model for abnormality. A p-value less than alpha indicates abnormal residuals.
+The Shapiro-Wilks test examines the residuals from the fitted model for abnormality. A p-value less than alpha indicates abnormal residuals. In this instance, the user should consider replicating the its.analysis model design using a non-parametric ANCOVA equivalent.
 
 The Levene's Test makes sure that there are equal variances between the treated groups. A p-value less than alpha indicates heterogeneous variances.
 
 A QQ-Norm and Boxplot are generated with the test results overlaid (respectively), with a Residual v Fitted and Autocorrelation Function Plot also generated.
 
-The results of bootstrap estimations in itsa.model will be plotted, unless argument is switched to FALSE.
+The results of bootstrap estimations in itsa.model will be plotted, unless argument is switched to FALSE. See plot.boot help file for assistance on interpreting these plots.
 
-Default is to generate plots and summary table, but plots may be overriden using no.plots argument.
+Default is to generate plots and summary table, but plots may be overridden using no.plots argument.
 
-Default alpha value for post-estimation statistics is 0.05, test results will suggest potential presence of problems at higher values (and also at higher levels relative to a user-inputted alpha), but user discretion is needed (examined in tandam with the Residuals v Fitted plot).
+Default alpha value for post-estimation statistics is 0.05, test results will suggest potential presence of problems at higher values (and also at higher levels relative to a user-defined alpha), but user discretion is needed (examined in tandem with the Residuals v Fitted plot).
 
 See 'itsa.model' documentation for further information.
 }

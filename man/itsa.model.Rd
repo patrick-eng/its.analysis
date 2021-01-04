@@ -4,12 +4,22 @@
 \alias{itsa.model}
 \title{Run Interrupted Time Series Analyses}
 \usage{
-itsa.model(data = NULL, time = NULL, depvar = NULL,
-  interrupt_var = NULL, covariates = NULL, alpha = 0.05,
-  no.plots = FALSE, bootstrap = TRUE, Reps = 1000, print = TRUE)
+itsa.model(
+  data = NULL,
+  time = NULL,
+  depvar = NULL,
+  interrupt_var = NULL,
+  covariates = NULL,
+  alpha = 0.05,
+  no.plots = FALSE,
+  bootstrap = TRUE,
+  Reps = 1000,
+  parr = "no",
+  print = TRUE
+)
 }
 \arguments{
-\item{data}{define data.}
+\item{data}{define data. Must be a data frame or object coercible into a data frame.}
 
 \item{time}{define time variable, must either be numeric (such as a year) or of class date.}
 
@@ -25,7 +35,9 @@ itsa.model(data = NULL, time = NULL, depvar = NULL,
 
 \item{bootstrap}{logical, specify where function should run bootstrap estimations of F-values and return table of results, default is TRUE.}
 
-\item{Reps}{define number of replications for bootstrapping, default is 1000.}
+\item{Reps}{numeric, define number of replications for bootstrapping, default is 1000.}
+
+\item{parr}{character, define if parallelisation should be used for bootstrapper, options are inherited from boot package (the default of "no", or "multicore" and "snow").}
 
 \item{print}{logical, specify whether the main model result should be printed to the console.}
 }
@@ -36,19 +48,19 @@ Returns a large list which can be assigned to the global environment, containing
 Sets up an Interrupted Time Series Analysis (ITSA) for analysing short time series data.
 }
 \details{
-This function provides a front door for the aov function in R's stats package (via car's Anova), setting it up for running Interrupted Time Series Analysis (ITSA).
+This function provides an Interrupted Time Series Analysis (ITSA) model using a variance-centric approach to estimating change in a dependent variable over time.
 
-Using the inputted variables, a Type-2 Sum Squares ANCOVA Lagged Dependent Variable model is fitted which estimates the difference in means between interrupted and non-interrupted time periods, while accounting for the lag of the dependent variable and any further specified covariates.
+Using the defined variables, a Type-2 Sum Squares ANCOVA Lagged Dependent Variable model is fitted which estimates the difference in means between interrupted and non-interrupted time periods, while accounting for the lag of the dependent variable and any further specified covariates.
 
-The function includes a bootstrap model by default, which runs 1000 replications of the main model with randomly drawn samples. A trimmed mean (10 percent removed) F-value is reported and a bootstrapped p-value derived from it. Users may turn off the bootstrapping model, or the number of replications for the bootstrap model to pass through can be altered using the Reps argument.
+The function includes a bootstrap model, which runs by default. This repeats 1000 replications of the main model with randomly drawn samples. A trimmed median (10 percent removed) F-value is reported and a bootstrapped p-value derived from it. Users may turn off the bootstrapping model, or the number of replications for the bootstrap model to pass through can be altered using the Reps argument.
 
-Variable names must be defined using quotation marks. Any number of covariates can be passed into the covariates argument as a list of vectors (both must be within the same data as the dependent and independent variables).
+Variable names must be defined using quotation marks, or their column index number within the data. Any number of covariates can be passed into the covariates argument as a list of vectors (both must be within the same data as the dependent and independent variables).
 
 Also returned as warning messages are the results of ANOVA and residual autocorrelation assumptions check ran in the background, if any are potentially violated. These tests and further post-estimation can be done through the itsa.postest function.
 
 Returns to console the results from analysis of variance test, results of the F-value bootstrap model, and a summary of the result (relative to user defined alpha) and any assumption violation warnings. Users may force this return off by declaring print=FALSE in the model arguments.
 
-Also returns a plot to the plot window graphing the dependent variable time series and interruption points. As this is a ggplot2 generated object, users can call the plot and make further customisations to it as an output.
+Further returns a plot to the plot window graphing the dependent variable time series and interruption points. As this is a ggplot2 generated object, users can call the plot and make further customisations to it as an output.
 
 Assigning to an object will return a list of all of the above, plus further tests including a Tukey Honest Significant Differences test, the data and arguments set by the user, a table of time-series group means, the full bootstrap model results and results of assumptions tests, and the full list of residual and fitted values.
 
@@ -59,12 +71,12 @@ If any of data, depvar, interrupt_var, or time are undefined, the process will s
 # Build variables
 
 year <- c(2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008,
-2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016)
+2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018)
 depv <- c(8.22, 8.19, 8.23, 8.28, 8.32, 8.39, 8.02,
-7.92, 7.62, 7.23, 7.1, 6.95, 7.36, 7.51, 7.78, 7.92)
-interruption <- c(0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0)
+7.92, 7.62, 7.23, 7.1, 7.11, 6.95, 7.36, 7.51, 7.78, 7.92, 7.81)
+interruption <- c(0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0)
 cov1 <- c(3.1, 3.3, 5.1, 5.2, 5.4, 4.5, 4.7, 4.9, 5.3,
-5.6, 5.8, 4.8, 5.2, 4.5, 4.6, 5.1)
+5.6, 5.8, 6.0, 4.8, 5.2, 4.5, 4.6, 5.1, 4.7)
 
 x <- as.data.frame(cbind(year, depv, interruption, cov1))
 
